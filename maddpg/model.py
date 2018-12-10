@@ -17,8 +17,8 @@ class ActorNetwork(nn.Module):
         """
         :param observation_size: observation size
         :param action_size: action size
-        :param seed: random seed
         :param use_batch_norm: True to use batch norm
+        :param seed: random seed
         :param fc1_units: number of nodes in 1st hidden layer
         :param fc2_units: number of nodes in 2nd hidden layer
         :param fc3_units: number of nodes in 3rd hidden layer

@@ -1,4 +1,5 @@
 import numpy as np
+import yaml
 from collections import deque
 from unityagents import UnityEnvironment
 
@@ -142,43 +143,18 @@ def validate_episode(multi_agent, brain_name, max_t):
 
 if __name__ == '__main__':
 
-    base_path = 'examples/tennis'
-    env_filename = base_path + '/Tennis_Linux_NoVis/Tennis.x86_64'
+    yaml_path = 'examples/tennis/config.yaml'
 
-    session = 104
-    checkpoint_save_path = base_path + ('/model/checkpoint_%s.pth' % session)
+    with open(yaml_path, 'r') as f:
+        cfg = yaml.load(f)
 
-    env = UnityEnvironment(file_name=env_filename)
+    env_filepath = cfg['train_env_filepath']
+    train_config = cfg['train_config']
+    agent_config = cfg['agent_config']
+    solving_score = cfg['solving_score']
+    checkpoint_save_path = cfg['model_filepath']
 
-    train_config = {
-        # training loop
-        'n_episodes': 2500,
-        'max_t': 10000,
-        'mini_batch_size': 256,
-        'update_every': 2,
-
-        # optimizers
-        'actor_optim_params': {
-            'lr': 1e-4
-        },
-        'critic_optim_params': {
-            'lr': 1e-3,
-        },
-
-        # noise
-        'ou_noise_start': 1.0,
-        'ou_noise_decay_rate': 1.0,
-
-        # maddpg
-        'soft_update_tau': 5e-3,
-        'discount_gamma': 0.95,
-
-        # replay memory
-        'buffer_size': 1000000
-    }
-
-    agent_config = {
-    }
+    env = UnityEnvironment(file_name=env_filepath)
 
     multi_agent, _, _, _ = train(
         environment=env,
