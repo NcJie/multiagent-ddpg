@@ -131,7 +131,11 @@ class Brain:
         q_target = rewards + self._gamma * q_target_next * (1 - dones)
 
         q_expected = self._critic_local(all_obs, all_actions)
-        critic_loss = F.mse_loss(q_expected, q_target.detach())
+
+        # mse loss, manual calculation due to mse_loss bug, as of 0.4.1
+        # https://github.com/pytorch/pytorch/issues/10148
+        # critic_loss = F.mse_loss(q_expected, q_target.detach())
+        critic_loss = ((q_expected - q_target.detach()) ** 2).mean()
 
         self._critic_optimizer.zero_grad()
         critic_loss.backward()
