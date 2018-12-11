@@ -13,7 +13,7 @@ def hidden_init(layer):
 class ActorNetwork(nn.Module):
 
     def __init__(self, observation_size, action_size, use_batch_norm, seed,
-                 fc1_units=256, fc2_units=128, fc3_units=128):
+                 fc1_units=128, fc2_units=64, fc3_units=32):
         """
         :param observation_size: observation size
         :param action_size: action size
@@ -71,7 +71,7 @@ class ActorNetwork(nn.Module):
 class CriticNetwork(nn.Module):
 
     def __init__(self, observation_size, action_size, use_batch_norm, seed,
-                 fc1_units=256, fc2_units=128, fc3_units=128):
+                 fc1_units=128, fc2_units=64, fc3_units=32):
         """
         :param observation_size: Dimension of each state
         :param action_size: Dimension of each state

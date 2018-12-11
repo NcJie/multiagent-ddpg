@@ -1,18 +1,18 @@
 test_env_filepath: examples/tennis/Tennis.app
 train_env_filepath: examples/tennis/Tennis_Linux_NoVis/Tennis.x86_64
-model_filepath: examples/tennis/model/checkpoint_105.pth
+model_filepath: examples/tennis/model/checkpoint_106.pth
 solving_score: 0.5
 
 train_config:
   # training loop
-  n_episodes: 1500
+  n_episodes: 2000
   max_t: 100000
-  mini_batch_size: 256
+  mini_batch_size: 512
   update_every: 2
 
   # optimizers:
   actor_optim_params:
-    lr: 0.0001
+    lr: 0.001
   critic_optim_params:
     lr: 0.001
 
@@ -21,7 +21,7 @@ train_config:
   ou_noise_decay_rate: 0.998
 
   # maddpg
-  soft_update_tau: 0.005
+  soft_update_tau: 0.01
   discount_gamma: 0.95
 
   # replay memory
