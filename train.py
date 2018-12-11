@@ -49,8 +49,8 @@ def train(environment,
 
     for i_episode in range(1, n_episodes + 1):
 
-        train_scores = train_episode(multi_agent, brain_name, max_t, ou_noise)
-        val_scores = validate_episode(multi_agent, brain_name, max_t)
+        train_scores = train_episode(env, multi_agent, brain_name, max_t, ou_noise)
+        val_scores = validate_episode(env, multi_agent, brain_name, max_t)
 
         ou_noise *= ou_noise_decay_rate
 
@@ -92,7 +92,7 @@ def train(environment,
     return multi_agent, all_train_scores, all_val_scores, solve_epi
 
 
-def train_episode(multi_agent, brain_name, max_t, ou_noise):
+def train_episode(env, multi_agent, brain_name, max_t, ou_noise):
 
     env_info = env.reset(train_mode=True)[brain_name]
     obs = env_info.vector_observations
@@ -116,7 +116,7 @@ def train_episode(multi_agent, brain_name, max_t, ou_noise):
     return scores
 
 
-def validate_episode(multi_agent, brain_name, max_t):
+def validate_episode(env, multi_agent, brain_name, max_t):
     """Validation execute an episode without noise
     """
 
