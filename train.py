@@ -44,13 +44,11 @@ def train(environment,
     all_val_scores = []
     solve_epi = 0
 
-    val_scores_window = deque(maxlen=print_every)
     train_scores_window = deque(maxlen=print_every)
 
     for i_episode in range(1, n_episodes + 1):
 
         train_scores = train_episode(env, multi_agent, brain_name, max_t, ou_noise)
-        val_scores = validate_episode(env, multi_agent, brain_name, max_t)
 
         ou_noise *= ou_noise_decay_rate
 
@@ -58,38 +56,21 @@ def train(environment,
         train_scores_window.append(train_scores)
         all_train_scores.append(train_scores)
 
-        val_scores = np.max(val_scores)
-        val_scores_window.append(val_scores)
-        all_val_scores.append(val_scores)
-
         print('\rEpisode {}\tAverage Training Score: {:.3f}'
-              '\tValidation Score: {:.3f}'
-              .format(
-                  i_episode,
-                  np.mean(train_scores_window),
-                  np.mean(val_scores_window)
-              ), end='')
+              .format(i_episode, np.mean(train_scores_window)), end='')
 
         if i_episode % print_every == 0:
             print('\rEpisode {}\tAverage Training Score: {:.3f}'
-                  '\tValidation Score: {:.3f}'
-                  .format(
-                      i_episode,
-                      np.mean(train_scores_window),
-                      np.mean(val_scores_window)))
+                  .format(i_episode, np.mean(train_scores_window)))
 
         if np.mean(train_scores_window) >= solving_score and solve_epi == 0:
             print('\nEnvironment solved in {:d} episodes!'
                   '\tAverage Training Score: {:.3f}'
-                  '\tValidation Score: {:.3f}'
-                  .format(
-                      i_episode,
-                      np.mean(train_scores_window),
-                      np.mean(val_scores_window)))
+                  .format(i_episode, np.mean(train_scores_window)))
 
             solve_epi = i_episode
 
-    return multi_agent, all_train_scores, all_val_scores, solve_epi
+    return multi_agent, all_train_scores, solve_epi
 
 
 def train_episode(env, multi_agent, brain_name, max_t, ou_noise):
@@ -116,31 +97,6 @@ def train_episode(env, multi_agent, brain_name, max_t, ou_noise):
     return scores
 
 
-def validate_episode(env, multi_agent, brain_name, max_t):
-    """Validation execute an episode without noise
-    """
-
-    fast_simulation = True
-    env_info = env.reset(train_mode=fast_simulation)[brain_name]
-    obs = env_info.vector_observations
-    scores = np.zeros(multi_agent.agent_count)
-
-    for _ in range(max_t):
-        actions = multi_agent.act(obs)
-        env_info = env.step(actions)[brain_name]
-        next_obs = env_info.vector_observations
-        rewards = env_info.rewards
-        dones = env_info.local_done
-
-        obs = next_obs
-        scores += rewards
-
-        if np.any(dones):
-            break
-
-    return scores
-
-
 if __name__ == '__main__':
 
     yaml_path = 'examples/tennis/config.yaml'
@@ -156,7 +112,7 @@ if __name__ == '__main__':
 
     env = UnityEnvironment(file_name=env_filepath)
 
-    multi_agent, _, _, _ = train(
+    multi_agent, _, _ = train(
         environment=env,
         train_config=train_config,
         agent_config=agent_config,
