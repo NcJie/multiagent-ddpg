@@ -1,10 +1,8 @@
 import numpy as np
 import yaml
-
 from unityagents import UnityEnvironment
 
 from utils.utils import load_agent
-
 
 np.set_printoptions(precision=3, suppress=True)
 

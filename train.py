@@ -41,18 +41,15 @@ def train(environment,
     )
 
     all_train_scores = []
-    all_val_scores = []
     solve_epi = 0
-
     train_scores_window = deque(maxlen=print_every)
 
     for i_episode in range(1, n_episodes + 1):
 
         train_scores = train_episode(env, multi_agent, brain_name, max_t, ou_noise)
+        train_scores = np.max(train_scores)
 
         ou_noise *= ou_noise_decay_rate
-
-        train_scores = np.max(train_scores)
         train_scores_window.append(train_scores)
         all_train_scores.append(train_scores)
 
